@@ -1,9 +1,8 @@
 package jp.co.rjc.mypassword.activity;
 
-import jp.co.rjc.mypassword.R;
-
 import org.apache.cordova.DroidGap;
 
+import jp.co.rjc.mypassword.R;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
