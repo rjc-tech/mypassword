@@ -28,5 +28,6 @@ proguard/
 .project
 .settings/
 project.properties
+lint.xml
 
 
