@@ -103,6 +103,6 @@
     </feature>
     <!-- Deprecated plugins element. Remove in 3.0 -->
     <plugins>
-		<plugin name="ClipboardManagerPlugin" value="com.saatcioglu.phonegap.ClipboardManagerPlugin.ClipboardManagerPlugin"/>
+        <plugin name="SQLitePlugin" value="jp.co.rjc.mypassword.plugin.SQLitePlugin"/>
     </plugins>
 </widget>
