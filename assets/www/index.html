@@ -39,43 +39,39 @@
 
 			// 遷移のイベントハンドラ
 			function transitionHandler(obj) {
+				var url = obj.getAttribute("href");
 
 				// サイトリスト
-				if (obj.getAttribute("href")=="#site_list") {
+				if (url.match("#site_list")) {
 					initSiteList();
+				}
+
+				// サイト詳細
+				if (url.match("#site_detail")) {
+
+					if (url.indexOf("?") > -1) {
+						target_site_id = getQueryString(url)["id"];
+
+						alert(target_site_id);
+					}
 				}
 			}
 
-
-//			console.log("①①①①①①①");
-//			var sql = "insert into site_info (site_name, account_id, account_password, site_url, notes, last_access_datetime) VALUES (?,?,?,?,?,?)";
-//
-//			console.log("②②②②②②②");
-//			var param = ["siteName", "accountId", "accountPass", "url", "ntoes", new Date().getTime()];
-//
-//			queryInsert(sql, param);
-
-
 			function initSiteList() {
-
 				var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
 				db.transaction(function(tx) {
 					tx.executeSql("select id, site_name from site_info order by last_access_datetime;", [], function(tx, res) {
-
-					console.log(res.rows.length);
+						$("#siteList").text("");
 						for(var i = 0; i < res.rows.length; i++){
 							console.log(res.rows.item(i).id);
 							console.log(res.rows.item(i).site_name);
 
-							$("#siteList").append("<li class='widget uib_w_20' data-uib='app_framework/listitem' data-ver='1' ><a href='#site_detail?id='" + res.rows.item(i).id + "'>" + res.rows.item(i).site_name + "</li>");
+							$("#siteList").append("<li class='widget uib_w_20' data-uib='app_framework/listitem' data-ver='1' ><a href='?id=" + res.rows.item(i).id + "#site_detail'>" + res.rows.item(i).site_name + "</li>");
 						}
 					});
 				});
 			}
 		</script>
-		<script src="./js/cordova.js"></script>
-		<script src="SQLitePlugin.js"></script>
-		<script src="./js/sqlite.js"></script>
 		<!--
    You may substitute jQuery for the App Framework selector library.
    See http://app-framework-software.intel.com/documentation.php#afui/afui_jquery
@@ -83,6 +79,10 @@
 		<script type="application/javascript" src="app_framework/2.1/appframework.js"></script>
 		<script type="application/javascript" src="app_framework/2.1/appframework.ui.js" data-ver="1"></script>
 		<script type="application/javascript" src="js/index_user_scripts.js"></script>
+		<script src="js/SQLitePlugin.js"></script>
+		<script src="js/cordova.js"></script>
+		<script src="js/sqlite.js"></script>
+		<script src="js/common.js"></script>
 	</head>
 
 	<body id="afui">
