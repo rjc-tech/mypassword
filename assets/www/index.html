@@ -17,16 +17,66 @@
 			input, textarea  { -webkit-user-select:text; }
 		</style>
 		<script src="intelxdk.js"></script>
+		<script src="/media/js/jquery-1.11.0.min.js"></script>
+		<script src="/media/js/jquery-migrate-1.2.1.min.js"></script>
 		<script type="text/javascript">
 			/* Intel native bridge is available */
 			var onDeviceReady=function(){
-			//hide splash screen
-			intel.xdk.device.hideSplashScreen();
+				//hide splash screen
+				intel.xdk.device.hideSplashScreen();
 			};
 			document.addEventListener("intel.xdk.device.ready",onDeviceReady,false);
+
+			// クリックイベントハンドラ
+			function clickHandler(e) {
+
+				var obj = e ? e.target : event.srcElement;
+				if (obj.tagName=='A') {
+					transitionHandler(obj);
+				}
+			}
+			document.addEventListener("click",clickHandler,false);
+
+			// 遷移のイベントハンドラ
+			function transitionHandler(obj) {
+
+				// サイトリスト
+				if (obj.getAttribute("href")=="#site_list") {
+					initSiteList();
+				}
+			}
+
+
+//			console.log("①①①①①①①");
+//			var sql = "insert into site_info (site_name, account_id, account_password, site_url, notes, last_access_datetime) VALUES (?,?,?,?,?,?)";
+//
+//			console.log("②②②②②②②");
+//			var param = ["siteName", "accountId", "accountPass", "url", "ntoes", new Date().getTime()];
+//
+//			queryInsert(sql, param);
+
+
+			function initSiteList() {
+
+				var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
+				db.transaction(function(tx) {
+					tx.executeSql("select id, site_name from site_info order by last_access_datetime;", [], function(tx, res) {
+
+					console.log(res.rows.length);
+						for(var i = 0; i < res.rows.length; i++){
+							console.log(res.rows.item(i).id);
+							console.log(res.rows.item(i).site_name);
+
+							$("#siteList").append("<li class='widget uib_w_20' data-uib='app_framework/listitem' data-ver='1' ><a href='#site_detail?id='" + res.rows.item(i).id + "'>" + res.rows.item(i).site_name + "</li>");
+						}
+					});
+				});
+			}
 		</script>
-		<script src="cordova.js"></script>
-		<!--   
+		<script src="./js/cordova.js"></script>
+		<script src="SQLitePlugin.js"></script>
+		<script src="./js/sqlite.js"></script>
+		<!--
    You may substitute jQuery for the App Framework selector library.
    See http://app-framework-software.intel.com/documentation.php#afui/afui_jquery
   -->
@@ -114,7 +164,6 @@
 						<div class="widget-container content-area horiz-area wrapping-col left">
 						</div>
 						<div class="widget-container content-area horiz-area wrapping-col right">
-
 							<a class="button widget uib_w_25 d-margins icon settings gray" data-uib="app_framework/button" data-ver="1" href="#input_pin"></a>
 						</div>
 					</header>
@@ -125,13 +174,7 @@
 							<div class="col uib_col_7 col-0_12-12 background_default" data-uib="layout/col" data-ver="0">
 								<div class="widget-container content-area vertical-col">
 
-									<ul class="list widget uib_w_19 d-margins" data-uib="app_framework/listview" data-ver="1">
-										<li class="widget uib_w_20" data-uib="app_framework/listitem" data-ver="1"><a href="#site_detail">List Item</a>
-										</li>
-										<li class="widget uib_w_21" data-uib="app_framework/listitem" data-ver="1"><a href="#site_detail">List Item</a>
-										</li>
-										<li class="widget uib_w_22" data-uib="app_framework/listitem" data-ver="1"><a href="#site_detail">List Item</a>
-										</li>
+									<ul class="list widget uib_w_19 d-margins" data-uib="app_framework/listview" data-ver="1" id="siteList">
 									</ul>
 									<div class="grid grid-pad urow uib_row_8 row-height-8" data-uib="layout/row" data-ver="0">
 										<div class="col uib_col_9 col-1_12-12" data-uib="layout/col" data-ver="0">
