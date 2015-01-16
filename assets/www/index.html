@@ -27,19 +27,6 @@
 			};
 			document.addEventListener("intel.xdk.device.ready",onDeviceReady,false);
 
-			/** 詳細画面：クリップボードにコピー */
-			function copyToClipboard(id) {
-				var obj = document.getElementById(id);
-			    if (obj.value) {
-			        window.clipboardManagerCopy(
-						obj.value,
-						function(r){alert('クリップボードにコピーしました。');}, //成功時
-						function(e){alert(e);} //失敗時
-			        );
-			    } else {
-			        alert('コピーするデータがありません。');
-			    }
-			}
 			// クリックイベントハンドラ
 			function clickHandler(e) {
 
@@ -57,6 +44,8 @@
 				// サイトリスト
 				if (url.match("#site_list")) {
 					initSiteList();
+				} else if (url.match("#site_detail")) {
+					initSiteDetail();
 				}
 
 				// サイト詳細
@@ -93,6 +82,7 @@
 		<script type="application/javascript" src="app_framework/2.1/appframework.ui.js" data-ver="1"></script>
 		<script type="application/javascript" src="js/clipboardmanager.js"></script>
 		<script type="application/javascript" src="js/index_user_scripts.js"></script>
+		<script type="application/javascript" src="js/index_site_detail.js"></script>
 		<script src="js/SQLitePlugin.js"></script>
 		<script src="js/cordova.js"></script>
 		<script src="js/sqlite.js"></script>
@@ -255,7 +245,7 @@
 												<div class="table-thing with-label widget uib_w_29 input_detail" data-uib="app_framework/input" data-ver="1">
 													<input class="wide-control" id="login_id" placeholder="input your login Id" type="text">
 												</div>
-												<a class="button widget uib_w_40 d-margins btn_detail icon stack gray" data-uib="app_framework/button" data-ver="1" onclick="copyToClipboard('login_id')"></a><span class="uib_shim"></span>
+												<a class="button widget uib_w_40 d-margins btn_detail icon stack gray" data-uib="app_framework/button" data-ver="1" id="btn_copy_id"></a><span class="uib_shim"></span>
 											</div>
 										</div>
 										<span class="uib_shim"></span>
@@ -272,9 +262,11 @@
 										<div class="col uib_col_16 col-1_12-12" data-uib="layout/col" data-ver="0">
 											<div class="widget-container content-area wrapping-col left">
 												<div class="table-thing with-label widget uib_w_31 input_detail" data-uib="app_framework/input" data-ver="1">
-													<input class="wide-control" id="password" placeholder="input your password" type="text">
+													<input class="wide-control" id="password-txt" placeholder="input your password" type="text" style="display: none;">
+													<input class="wide-control" id="password-pwd" placeholder="input your password" type="password">
 												</div>
-												<a class="button widget uib_w_41 d-margins icon stack gray btn_detail" data-uib="app_framework/button" data-ver="1" onclick="copyToClipboard('password')"></a><span class="uib_shim"></span>
+												<a href="javascript:void();" id="btn_view_pw"><img id="password-btn" src="images/unmask_pass.png" /></a><span class="uib_shim"></span>
+												<a class="button widget uib_w_41 d-margins icon stack gray btn_detail" data-uib="app_framework/button" data-ver="1" id="btn_copy_pw"></a><span class="uib_shim"></span>
 											</div>
 										</div>
 										<span class="uib_shim"></span>

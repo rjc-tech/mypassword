@@ -2,6 +2,22 @@
 function initSiteDetail() {
 }
 
+/** 詳細画面：クリックイベント */
+$(function() {
+	// パスワード コピーボタン
+	$("#btn_copy_pw").on("touchend", function(e) {
+		copyToClipboard(getPasswordId());
+	});
+	// パスワード 表示切替ボタン
+	$("#btn_view_pw").on("touchend", function(e) {
+		changeShowPassword();
+	});
+	// ログインID コピーボタン
+	$("#btn_copy_id").on("touchend", function(e) {
+		copyToClipboard('login_id');
+	});
+});
+
 /** 詳細画面：クリップボードにコピー */
 function copyToClipboard(id) {
 	var obj = document.getElementById(id);
