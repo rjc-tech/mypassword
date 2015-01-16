@@ -44,6 +44,8 @@
 				// サイトリスト
 				if (url.match("#site_list")) {
 					initSiteList();
+				} else if (url.match("#site_detail")) {
+					initSiteDetail();
 				}
 
 				// サイト詳細
@@ -78,7 +80,9 @@
   -->
 		<script type="application/javascript" src="app_framework/2.1/appframework.js"></script>
 		<script type="application/javascript" src="app_framework/2.1/appframework.ui.js" data-ver="1"></script>
+		<script type="application/javascript" src="js/clipboardmanager.js"></script>
 		<script type="application/javascript" src="js/index_user_scripts.js"></script>
+		<script type="application/javascript" src="js/index_site_detail.js"></script>
 		<script src="js/SQLitePlugin.js"></script>
 		<script src="js/cordova.js"></script>
 		<script src="js/sqlite.js"></script>
@@ -90,6 +94,7 @@
 		<!-- content goes here-->
 		<div class="uwrap" id="content">
 			<div class="upage panel" id="input_pin" data-header="af-header-2" data-footer="none">
+				<!-- ログイン画面 -->
 				<div class="upage-outer">
 					<header class="container-group inner-element uib_w_39" data-uib="app_framework/header" data-ver="1" id="af-header-2">
 						<h1>PINコード入力</h1>
@@ -116,16 +121,16 @@
 											<div class="widget-container content-area wrapping-col left">
 
 												<div class="table-thing with-label widget uib_w_2 d-margins input_pin_width" data-uib="app_framework/input" data-ver="1">
-													<input class="wide-control" type="text">
+													<input name="inputPINno" class="wide-control" type="text" maxlength="1">
 												</div>
 												<div class="table-thing with-label widget uib_w_3 d-margins input_pin_width" data-uib="app_framework/input" data-ver="1">
-													<input class="wide-control" type="text">
+													<input name="inputPINno" class="wide-control" type="text" maxlength="1">
 												</div>
 												<div class="table-thing with-label widget uib_w_4 d-margins input_pin_width" data-uib="app_framework/input" data-ver="1">
-													<input class="wide-control" type="text">
+													<input name="inputPINno" class="wide-control" type="text" maxlength="1">
 												</div>
 												<div class="table-thing with-label widget uib_w_5 d-margins input_pin_width" data-uib="app_framework/input" data-ver="1">
-													<input class="wide-control" type="text">
+													<input name="inputPINno" class="wide-control" type="text" maxlength="1">
 												</div><span class="uib_shim"></span>
 											</div>
 										</div>
@@ -135,11 +140,21 @@
 										<div class="col uib_col_3 col-1_12-12" data-uib="layout/col" data-ver="0">
 											<div class="widget-container content-area wrapping-col left">
 
-												<a class="button widget uib_w_6 d-margins button_pin gray" data-uib="app_framework/button" data-ver="1">7</a><a class="button widget uib_w_7 d-margins button_pin gray" data-uib="app_framework/button" data-ver="1">8</a><a class="button widget uib_w_8 d-margins gray button_pin"
-												data-uib="app_framework/button" data-ver="1">9</a><a class="button widget uib_w_9 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1">6</a><a class="button widget uib_w_11 d-margins gray button_pin" data-uib="app_framework/button"
-												data-ver="1">5</a><a class="button widget uib_w_10 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1">4</a><a class="button widget uib_w_12 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1">3</a>
-												<a class="button widget uib_w_13 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1">2</a><a class="button widget uib_w_14 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1">1</a><a class="button widget uib_w_16 d-margins gray button_pin btn_pin_double"
-												data-uib="app_framework/button" data-ver="1">0</a><a class="button widget uib_w_17 d-margins button_pin gray" data-uib="app_framework/button" data-ver="1" href="#site_list">BS</a><span class="uib_shim"></span>
+												<a class="button widget uib_w_6 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(1)">1</a>
+												<a class="button widget uib_w_7 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(2)">2</a>
+												<a class="button widget uib_w_8 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(3)">3</a>
+
+												<a class="button widget uib_w_9 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(4)">4</a>
+												<a class="button widget uib_w_10 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(5)">5</a>
+												<a class="button widget uib_w_11  d-margins gray button_pin" data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(6)">6</a>
+
+												<a class="button widget uib_w_12 d-margins button_pin gray" data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(7)">7</a>
+												<a class="button widget uib_w_13 d-margins button_pin gray" data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(8)">8</a>
+												<a class="button widget uib_w_14 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(9)">9</a>
+
+												<a class="button widget uib_w_15 d-margins gray button_pin btn_pin_double"data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(0)">0</a>
+												<a class="button widget uib_w_16 d-margins button_pin gray" data-uib="app_framework/button" data-ver="1" href="#site_list" onClick="chgDispValue('BS')">BS</a>
+												<span class="uib_shim"></span>
 											</div>
 										</div>
 										<span class="uib_shim"></span>
@@ -156,6 +171,7 @@
 				<!-- /upage-outer -->
 
 			</div>
+			<!-- 一覧画面 -->
 			<div class="upage panel" id="site_list" data-header="af-header-0" data-footer="none">
 				<div class="upage-outer">
 					<header class="container-group inner-element uib_w_18" data-uib="app_framework/header" data-ver="1" id="af-header-0">
@@ -195,6 +211,7 @@
 				</div>
 				<!-- /upage-outer -->
 			</div>
+			<!-- 詳細画面 -->
 			<div class="upage panel" id="site_detail" data-header="af-header-1" data-footer="none">
 				<div class="upage-outer">
 					<header class="container-group inner-element uib_w_38" data-uib="app_framework/header" data-ver="1" id="af-header-1">
@@ -239,9 +256,9 @@
 										<div class="col uib_col_14 col-1_12-12" data-uib="layout/col" data-ver="0">
 											<div class="widget-container content-area wrapping-col left">
 												<div class="table-thing with-label widget uib_w_29 input_detail" data-uib="app_framework/input" data-ver="1">
-													<input class="wide-control" placeholder="Placeholder Text" type="text">
+													<input class="wide-control" id="login_id" placeholder="input your login Id" type="text">
 												</div>
-												<a class="button widget uib_w_40 d-margins btn_detail icon stack gray" data-uib="app_framework/button" data-ver="1"></a><span class="uib_shim"></span>
+												<a class="button widget uib_w_40 d-margins btn_detail icon stack gray" data-uib="app_framework/button" data-ver="1" id="btn_copy_id"></a><span class="uib_shim"></span>
 											</div>
 										</div>
 										<span class="uib_shim"></span>
@@ -258,9 +275,11 @@
 										<div class="col uib_col_16 col-1_12-12" data-uib="layout/col" data-ver="0">
 											<div class="widget-container content-area wrapping-col left">
 												<div class="table-thing with-label widget uib_w_31 input_detail" data-uib="app_framework/input" data-ver="1">
-													<input class="wide-control" placeholder="Placeholder Text" type="text">
+													<input class="wide-control" id="password-txt" placeholder="input your password" type="text" style="display: none;">
+													<input class="wide-control" id="password-pwd" placeholder="input your password" type="password">
 												</div>
-												<a class="button widget uib_w_41 d-margins icon stack gray btn_detail" data-uib="app_framework/button" data-ver="1"></a><span class="uib_shim"></span>
+												<a href="javascript:void();" id="btn_view_pw"><img id="password-btn" src="images/unmask_pass.png" /></a><span class="uib_shim"></span>
+												<a class="button widget uib_w_41 d-margins icon stack gray btn_detail" data-uib="app_framework/button" data-ver="1" id="btn_copy_pw"></a><span class="uib_shim"></span>
 											</div>
 										</div>
 										<span class="uib_shim"></span>
