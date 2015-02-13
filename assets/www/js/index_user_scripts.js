@@ -1,5 +1,6 @@
 var pinValues = [];
 var PIN_ERROR = "PINコードが違います。再入力してください";
+var pinNo = ""; //PINコード文字列
 
 (function()
 {
@@ -35,8 +36,10 @@ function chgDispValue(btnNo){
 
 	chgDispRef();
 
+
 	// PINコードに4桁入力された場合
 	if(pinValues.length > 3){
+		insertPin();//テスト用に呼び出し 後で適切な場所での使用に書き換える予定
 		// 入力パスワード確認
 		if(checkPin()){
 			// メッセージ初期化
@@ -69,29 +72,52 @@ function chgDispRef(){
 	elements[2].value = "";
 	elements[3].value = "";
 
+
 	if(pinValues.length >= 1){
     	elements[0].value = pinValues[0];
+    	pinNo = "";
+    	pinNo = pinNo + pinValues[0];
     }
 	if(pinValues.length >= 2){
     	elements[1].value = pinValues[1];
+    	pinNo = pinNo + pinValues[1];
     }
 	if(pinValues.length >= 3){
     	elements[2].value = pinValues[2];
+    	pinNo = pinNo + pinValues[2];
     }
 	if(pinValues.length >= 4){
 	    elements[3].value = pinValues[3];
-
-	    //ページ遷移
-	    //window.location.hash = '#site_list';
-	    //window.location.hash.refresh();
-	    //alert(window.location.hash);
-	    //display('#site_list');
-	    //window.location.hash = "#site_list";
-	    location.href="file:///android_asset/www/index.html#site_list"
-	    //initSiteList();
-	    //alert("成功！");
+    	pinNo = pinNo + pinValues[3];
     }
 
+}
+
+
+/***********************************
+** Pin登録処理 **
+***********************************/
+function insertPin() {
+
+    queryInsert("INSERT INTO login_info (pin) VALUES (?)", [pinNo]);
+    //テスト用（登録内容を表示する）
+    //testSel();
+    alert("登録値pin" + pinNo);
+}
+
+/* テスト用 */
+function testSel() {
+	var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
+	db.transaction(function(tx) {
+		tx.executeSql("select id, pin from login_info ;", [], function(tx, res) {
+			$("#siteList").text("");
+			for(var i = 0; i < res.rows.length; i++){
+				console.log(res.rows.item(i).id);
+				console.log(res.rows.item(i).pin);
+				alert("pin" + res.rows.item(i).pin);
+			}
+		});
+	});
 }
 
 /*****************************************************************
