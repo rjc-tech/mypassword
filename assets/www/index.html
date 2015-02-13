@@ -27,6 +27,21 @@
 			};
 			document.addEventListener("intel.xdk.device.ready",onDeviceReady,false);
 
+			// パスワード表示切り替え
+			$(function() {
+				$(".add").click(function () {
+					alert("");
+					$(".add").hide();
+					$(".remove").show();
+				});
+
+				$(".remove").click(function () {
+					alert("");
+					$(".add").show();
+					$(".remove").hide();
+				});
+			});
+
 			// クリックイベントハンドラ
 			function clickHandler(e) {
 
@@ -283,7 +298,8 @@
 													<input class="wide-control" id="password-txt" placeholder="input your password" type="text" style="display: none;">
 													<input class="wide-control" id="password-pwd" placeholder="input your password" type="password">
 												</div>
-												<a href="javascript:void();" id="btn_view_pw"><img id="password-btn" src="images/unmask_pass.png" /></a><span class="uib_shim"></span>
+												<a class="button widget uib_w_41 d-margins icon add gray btn_detail" data-uib="app_framework/button" data-ver="1"></a><span class="uib_shim"></span>
+												<a class="button widget uib_w_41 d-margins icon remove gray btn_detail" data-uib="app_framework/button" data-ver="1" style="display: none;"></a><span class="uib_shim"></span>
 												<a class="button widget uib_w_41 d-margins icon stack gray btn_detail" data-uib="app_framework/button" data-ver="1" id="btn_copy_pw"></a><span class="uib_shim"></span>
 											</div>
 										</div>
