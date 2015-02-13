@@ -108,4 +108,7 @@
     <plugins>
 		<plugin name="ClipboardManagerPlugin" value="com.saatcioglu.phonegap.ClipboardManagerPlugin.ClipboardManagerPlugin"/>
     </plugins>
+    <plugins>
+    	<plugin name="org.apache.cordova.inappbrowser" version="0.2.4" />
+    </plugins>
 </widget>
