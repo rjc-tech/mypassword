@@ -52,12 +52,15 @@
 					if (url.indexOf("?") > -1) {
 						target_site_id = getQueryString(url)["id"];
 
+						// 編集モード
 						$("#detail_type").val("edit");
 						$("#site_id").val(target_site_id);
 					} else {
+						// 新規作成モード
 						$("#detail_type").val("create");
 					}
 				}
+				// サイト詳細画面 初期化
 				if (url.match("#site_detail")) {
 					initSiteDetail();
 				}
@@ -323,8 +326,8 @@
 									<div class="grid grid-pad urow uib_row_10 row-height-10" data-uib="layout/row" data-ver="0">
 										<div class="col uib_col_11 col-1_12-12" data-uib="layout/col" data-ver="0">
 											<div class="widget-container content-area wrapping-col left" id="btn_area_edit">
-												<a class="button widget uib_w_37 d-margins btn_half icon refresh gray" data-uib="app_framework/button" data-ver="1" id="btn_detail_update" href="#site_list">更新</a>
-												<a class="button widget uib_w_36 d-margins btn_half icon trash gray" data-uib="app_framework/button" data-ver="1" id="btn_detail_delete" href="#site_list">削除</a>
+												<a class="button widget uib_w_37 d-margins btn_half icon refresh gray" data-uib="app_framework/button" data-ver="1" id="btn_detail_update">更新</a>
+												<a class="button widget uib_w_36 d-margins btn_half icon trash gray" data-uib="app_framework/button" data-ver="1" id="btn_detail_delete">削除</a>
 												<span class="uib_shim"></span>
 											</div>
 											<div class="widget-container content-area wrapping-col left" id="btn_area_create">

@@ -8,6 +8,16 @@ function initSiteDetail() {
 		$("#btn_area_edit").hide();
 		$("#btn_copy_pw").hide();
 		$("#btn_copy_id").hide();
+		$("#password-pwd").show();
+		$("#password-txt").hide();
+
+		// 値のクリア
+		$("#site_name").val("");
+		$("#login_id").val("");
+		$("#password-pwd").val("");
+		$("#password-txt").val("");
+		$("#site_url").val("");
+		$("#notes").val("");
 	} else if ($("#detail_type").val() == "edit") {
 		// サイト情報編集画面
 
@@ -16,6 +26,8 @@ function initSiteDetail() {
 		$("#btn_area_edit").show();
 		$("#btn_copy_pw").show();
 		$("#btn_copy_id").show();
+		$("#password-pwd").show();
+		$("#password-txt").hide();
 
 		// DBからサイト情報を読み込み
 		var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
@@ -24,6 +36,7 @@ function initSiteDetail() {
 			param.push($("#site_id").val());
 			tx.executeSql("select site_name, account_id, account_password, site_url, notes from site_info where id = ?;", param, function(tx, res) {
 
+				// 取得した値を反映
 				$("#site_name").val(res.rows.item(0).site_name);
 				$("#login_id").val(res.rows.item(0).account_id);
 				$("#password-pwd").val(res.rows.item(0).account_password);
@@ -151,6 +164,9 @@ function updateDetail() {
 
 	queryUpdate(sql, param);
 	alert("更新しました。");
+
+	// サイト一覧画面に遷移
+	forwardPage("#site_list");
 }
 //サイト情報 UPDATE文
 const SQL_UPDATE_SITEINFO = "UPDATE site_info SET ";
@@ -172,7 +188,7 @@ function addUpdateSql(sql, columnName, param, arrParam) {
 /** 詳細画面：入力された内容をDBに登録する */
 function insertDetail() {
 	var sql = "INSERT INTO site_info (id, site_name, account_id, account_password, site_url, notes, last_access_datetime) " +
-			  "VALUES ((SELECT MAX(id) FROM site_info),?,?,?,?,?,datetime('now', 'localtime'))";
+			  "VALUES ((SELECT MAX(id+1) FROM site_info),?,?,?,?,?,datetime('now', 'localtime'))";
 	var param = [];
 	param.push($("#site_name").val());
 	param.push($("#login_id").val());
@@ -186,8 +202,18 @@ function insertDetail() {
 
 /** 詳細画面：選択されたサイト情報を削除する */
 function deleteDetail() {
+
+	if ( ! confirm($("#site_name").val() + "を削除します。\nよろしいですか？")) {
+		alert("キャンセルされました。");
+		return;
+	}
+
 	var sql = "DELETE FROM site_info WHERE id = ?";
 	var param = [];
 	param.push($("#site_id").val());
 	queryDelete(sql, param);
+	alert("削除しました。");
+
+	// サイト一覧画面に遷移
+	forwardPage("#site_list");
 }

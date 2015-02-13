@@ -17,3 +17,12 @@ function getQueryString(url) {
     }
     return result;
 }
+
+/** index.html内のページ遷移を行う
+ *  href: 遷移したいアンカー */
+function forwardPage(href) {
+	var a = document.createElement("a");
+	a.setAttribute("href", href);
+	a.addEventListener("click",clickHandler,false);
+	$(a).trigger("click");
+}
