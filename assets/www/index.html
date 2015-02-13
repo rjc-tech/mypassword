@@ -39,6 +39,8 @@
 
 			// 遷移のイベントハンドラ
 			function transitionHandler(obj) {
+				//alert( Object.keys(obj));
+
 				var url = obj.getAttribute("href");
 
 				// サイトリスト
@@ -94,6 +96,8 @@
 		<script src="js/cordova.js"></script>
 		<script src="js/sqlite.js"></script>
 		<script src="js/common.js"></script>
+		<script src="js/aes.js"></script>
+		<script src="js/turbine.js"></script>
 	</head>
 
 	<body id="afui">
@@ -160,7 +164,8 @@
 												<a class="button widget uib_w_14 d-margins gray button_pin" data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(9)">9</a>
 
 												<a class="button widget uib_w_15 d-margins gray button_pin btn_pin_double"data-uib="app_framework/button" data-ver="1" onClick="chgDispValue(0)">0</a>
-												<a class="button widget uib_w_16 d-margins button_pin gray" data-uib="app_framework/button" data-ver="1" href="#site_list" onClick="chgDispValue('BS')">BS</a>
+												<a class="button widget uib_w_16 d-margins button_pin gray" data-uib="app_framework/button" data-ver="1" onClick="chgDispValue('BS')">BS</a>
+												<a class="button widget uib_w_16 d-margins button_pin gray" data-uib="app_framework/button" data-ver="1" href="#site_list" onClick="chgDispValue('BS')" ;return false>BS</a>
 												<span class="uib_shim"></span>
 											</div>
 										</div>
