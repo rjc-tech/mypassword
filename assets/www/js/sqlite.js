@@ -29,7 +29,7 @@ function queryInsert(sql, param) {
     });
 }
 
-function queryUpdate() {
+function queryUpdate(sql, param) {
     var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
     db.transaction(function(tx) {
         // tx.executeSql("UPDATE login_info SET pin=? WHERE id=?", ["xxxxx", 1], function(tx, res) {
@@ -41,7 +41,7 @@ function queryUpdate() {
         });
     });
 }
-function queryDelete() {
+function queryDelete(sql, param) {
     var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
     db.transaction(function(tx) {
         // tx.executeSql("DELETE FROM login_info WHERE id = ?", [1], function(tx, res) {

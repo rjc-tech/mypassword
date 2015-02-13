@@ -3,14 +3,21 @@ function initSiteDetail() {
 	if ($("#detail_type").val() == "create") {
 		// 新規作成画面
 
+		// ボタン 表示／非表示
+		$("#btn_area_create").show();
 		$("#btn_area_edit").hide();
 		$("#btn_copy_pw").hide();
 		$("#btn_copy_id").hide();
 	} else if ($("#detail_type").val() == "edit") {
 		// サイト情報編集画面
 
+		// ボタン 表示／非表示
 		$("#btn_area_create").hide();
+		$("#btn_area_edit").show();
+		$("#btn_copy_pw").show();
+		$("#btn_copy_id").show();
 
+		// DBからサイト情報を読み込み
 		var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
 		db.transaction(function(tx) {
 			var param = [];
@@ -57,22 +64,17 @@ $(function() {
 	$("#btn_detail_create").on("touchend", function(e) {
 		insertDetail();
 	});
-});
-// サイト情報 UPDATE文
-const SQL_UPDATE_SITEINFO = "UPDATE site_info SET ";
+	// URLを開くボタン
+	$("#btn_connect_url").on("touchend", function(e) {
+		var url = $("#site_url").val();
 
-function addUpdateSql(sql, columnName, param) {
-
-	if (param) {
-		if (sql != SQL_UPDATE_SITEINFO) {
-			sql = sql + ",";
+		// http始まりではない場合、http://を付与
+		if (0 != url.indexOf("http")) {
+			url = "http://" + url;
 		}
-		sql = sql + columnName + "=" + param;
-	}
-
-	return sql;
-}
-
+		var win = window.open(encodeURI(url), '_system', 'location=yes');
+	});
+});
 
 /** 詳細画面：クリップボードにコピー */
 function copyToClipboard(id) {
@@ -108,38 +110,63 @@ function changeShowPassword() {
 		$("#password-pwd").val($("#password-txt").val());
 		$("#password-txt").hide();
 		$("#password-pwd").show();
-//		$("#btn_view_pw").attr("src", "images/unmask_pass.png");
 	} else {
 		$("#password-txt").val($("#password-pwd").val());
 		$("#password-pwd").hide();
 		$("#password-txt").show();
-//		$("#btn_view_pw").attr("src", "images/mask_pass.png");
 	}
 }
 
 /** 詳細画面：入力された内容でDBを更新する */
 function updateDetail() {
 	var sql = SQL_UPDATE_SITEINFO;
-	var pwId = "$" + getPasswordId();
+	var pwId = "#" + getPasswordId();
 
 	if ( ! confirm("入力した内容で更新します。\nよろしいですか？")) {
 		alert("更新がキャンセルされました。");
 		return;
 	}
-	alert("更新しました。");
-	return;
 
 	// 【更新処理】
+	// サイト名
+	sql = sql + 'site_name = ?,';
 	// ログインID
-	sql = addUpdateSql(sql, "id",               $("#login_id").val());
+	sql = sql + "account_id = ?,";
 	// パスワード
-	sql = addUpdateSql(sql, "account_password", $(pwId).val());
+	sql = sql + 'account_password = ?,';
 	// サイトURL
-	sql = addUpdateSql(sql, "site_url",         $("#site_url").val());
+	sql = sql + 'site_url = ?,';
 	// 備考
-	sql = addUpdateSql(sql, "notes",            $("#notes").val());
+	sql = sql + 'notes = ?';
+	// 条件
+	sql = sql + ", last_access_datetime = datetime('now', 'localtime') where id = ?";
+
+	var param = [];
+	param.push($("#site_name").val());
+	param.push($("#login_id").val());
+	param.push($(pwId).val());
+	param.push($("#site_url").val());
+	param.push($("#notes").val());
+	param.push($("#site_id").val());
 
 	queryUpdate(sql, param);
+	alert("更新しました。");
+}
+//サイト情報 UPDATE文
+const SQL_UPDATE_SITEINFO = "UPDATE site_info SET ";
+
+/** 詳細画面：UPDATE文 パラメータ更新命令を追加 */
+function addUpdateSql(sql, columnName, param, arrParam) {
+
+	if (param) {
+		if (sql != SQL_UPDATE_SITEINFO) {
+			sql = sql + ",";
+		}
+		sql = sql + columnName + "= ?";
+		arrParam.push(param);
+	}
+
+	return sql;
 }
 
 /** 詳細画面：入力された内容をDBに登録する */
@@ -159,8 +186,8 @@ function insertDetail() {
 
 /** 詳細画面：選択されたサイト情報を削除する */
 function deleteDetail() {
-	var sql = "DELETE FROM site_info WHERE account_id = ?";
+	var sql = "DELETE FROM site_info WHERE id = ?";
 	var param = [];
-	param.push($("#login_id").val());
+	param.push($("#site_id").val());
 	queryDelete(sql, param);
 }
