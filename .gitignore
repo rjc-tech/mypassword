@@ -27,6 +27,7 @@ proguard/
 
 .project
 .settings/
+.idea/
 project.properties
 lint.xml
 
