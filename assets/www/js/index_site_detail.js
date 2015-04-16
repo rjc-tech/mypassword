@@ -123,10 +123,14 @@ function changeShowPassword() {
 		$("#password-pwd").val($("#password-txt").val());
 		$("#password-txt").hide();
 		$("#password-pwd").show();
+		$("#btn_view_pw").removeClass("button widget uib_w_41 d-margins icon remove gray btn_detail")
+		$("#btn_view_pw").addClass("button widget uib_w_41 d-margins icon add gray btn_detail")
 	} else {
 		$("#password-txt").val($("#password-pwd").val());
 		$("#password-pwd").hide();
 		$("#password-txt").show();
+		$("#btn_view_pw").removeClass("button widget uib_w_41 d-margins icon add gray btn_detail")
+		$("#btn_view_pw").addClass("button widget uib_w_41 d-margins icon remove gray btn_detail")
 	}
 }
 

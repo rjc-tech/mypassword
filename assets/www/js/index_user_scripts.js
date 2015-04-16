@@ -48,6 +48,7 @@ function chgDispValue(btnNo){
 			chgDispRef();
 
 			// TODO OK:一覧画面に遷移
+			$("#switch_site_list").click();
 
 		}else{
 			// エラーメッセージ設定

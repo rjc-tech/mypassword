@@ -67,21 +67,6 @@
 					initSiteDetail();
 				}
 			}
-
-			function initSiteList() {
-				var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
-				db.transaction(function(tx) {
-					tx.executeSql("select id, site_name from site_info order by last_access_datetime;", [], function(tx, res) {
-						$("#siteList").text("");
-						for(var i = 0; i < res.rows.length; i++){
-							console.log(res.rows.item(i).id);
-							console.log(res.rows.item(i).site_name);
-
-							$("#siteList").append("<li class='widget uib_w_20' data-uib='app_framework/listitem' data-ver='1' ><a href='?id=" + res.rows.item(i).id + "#site_detail'>" + res.rows.item(i).site_name + "</li>");
-						}
-					});
-				});
-			}
 		</script>
 		<!--
    You may substitute jQuery for the App Framework selector library.
@@ -91,6 +76,7 @@
 		<script type="application/javascript" src="app_framework/2.1/appframework.ui.js" data-ver="1"></script>
 		<script type="application/javascript" src="js/clipboardmanager.js"></script>
 		<script type="application/javascript" src="js/index_user_scripts.js"></script>
+		<script type="application/javascript" src="js/index_site_list.js"></script>
 		<script type="application/javascript" src="js/index_site_detail.js"></script>
 		<script src="js/SQLitePlugin.js"></script>
 		<script src="js/cordova.js"></script>
@@ -105,8 +91,13 @@
 		<!-- content goes here-->
 		<div class="uwrap" id="content">
 			<div class="upage panel" id="input_pin" data-header="af-header-2" data-footer="none">
+				<!-- 遷移イベント TODO 遷移できない暫定対応 -->
+				<a href="#pin_input" id="switch_pin_input"></a>
+				<a href="#site_list" id="switch_site_list"></a>
+				<a href="#site_detail" id="switch_site_detail"></a>
+				
 				<!-- ログイン画面 -->
-				<div class="upage-outer">
+				<div class="upage-outer" id="pin_input">
 					<header class="container-group inner-element uib_w_39" data-uib="app_framework/header" data-ver="1" id="af-header-2">
 						<h1>PINコード入力</h1>
 						<div class="widget-container wrapping-col single-centered"></div>
@@ -292,7 +283,7 @@
 													<input class="wide-control" id="password-txt" placeholder="input your password" type="text" style="display: none;">
 													<input class="wide-control" id="password-pwd" placeholder="input your password" type="password">
 												</div>
-												<a class="button widget uib_w_41 d-margins icon stack gray btn_detail" data-uib="app_framework/button" data-ver="1" id="btn_view_pw"></a><span class="uib_shim"></span>
+												<a class="button widget uib_w_41 d-margins icon add gray btn_detail" data-uib="app_framework/button" data-ver="1" id="btn_view_pw"></a><span class="uib_shim"></span>
 												<a class="button widget uib_w_41 d-margins icon stack gray btn_detail" data-uib="app_framework/button" data-ver="1" id="btn_copy_pw"></a><span class="uib_shim"></span>
 											</div>
 										</div>
