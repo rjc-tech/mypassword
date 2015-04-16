@@ -1,6 +1,9 @@
 var pinValues = [];
+var PIN_CONF = "PINコードを確認します。再入力してください";
 var PIN_ERROR = "PINコードが違います。再入力してください";
+var PIN_ERROR_CONF = "PINコードが一致しません。再入力してください";
 var pinNo = ""; //PINコード文字列
+var registPinNo = ""; // PINコード（初回登録・更新用）
 
 (function()
 {
@@ -39,7 +42,33 @@ function chgDispValue(btnNo){
 
 	// PINコードに4桁入力された場合
 	if(pinValues.length > 3){
-		insertPin();//テスト用に呼び出し 後で適切な場所での使用に書き換える予定
+
+		// 初回判定
+		if (isFirstTime()) {
+			if (registPinNo == "") {
+				registPinNo = pinNo;
+				$("#label_summary").find("p").text(PIN_CONF);
+
+				// 初期化＆再表示
+				pinValues = [];
+				chgDispRef();
+				return;
+			} else {
+				if (registPinNo == pinNo) {
+					insertPin();
+				} else {
+					// エラーメッセージ設定
+					$("#label_summary").find("p").text(PIN_ERROR_CONF);
+
+					// 初期化＆再表示
+					registPinNo = "";
+					pinValues = [];
+					chgDispRef();
+
+				}
+			}
+		}
+
 		// 入力パスワード確認
 		if(checkPin()){
 			// メッセージ初期化
@@ -50,7 +79,7 @@ function chgDispValue(btnNo){
 			// TODO OK:一覧画面に遷移
 			$("#switch_site_list").click();
 
-		}else{
+		} else {
 			// エラーメッセージ設定
 			$("#label_summary").find("p").text(PIN_ERROR);
 
@@ -94,6 +123,16 @@ function chgDispRef(){
 
 }
 
+function isFirstTime() {
+	var result = false;
+	var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
+	db.transaction(function(tx) {
+		tx.executeSql("select id, pin from login_info ;", [], function(tx, res) {
+			result = 0 >= res.rows.length;
+		});
+	});
+	return result;
+}
 
 /***********************************
 ** Pin登録処理 **
@@ -103,7 +142,7 @@ function insertPin() {
     queryInsert("INSERT INTO login_info (pin) VALUES (?)", [pinNo]);
     //テスト用（登録内容を表示する）
     //testSel();
-    alert("登録値pin" + pinNo);
+    //alert("登録値pin" + pinNo);
 }
 
 /* テスト用 */
@@ -142,11 +181,11 @@ function checkPin(){
 		// });
 		tx.executeSql("select id, pin from login_info where pin = " + inputPin + ";", [], function(tx, res) {
 			retCnt = res.rows.length;
-		//	alert("データ取得件数 ： " + retCnt);
-		//	for(var i = 0; i < res.rows.length; i++){
-		//		console.log(res.rows.item(i).id);
-		//		console.log(res.rows.item(i).pin);
-		//	}
+        //    alert("データ取得件数 ： " + retCnt);
+        //    for(var i = 0; i < res.rows.length; i++){
+        //        console.log(res.rows.item(i).id);
+        //        console.log(res.rows.item(i).pin);
+        //    }
 		});
 	});
 
