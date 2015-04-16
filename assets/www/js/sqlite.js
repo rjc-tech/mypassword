@@ -1,14 +1,14 @@
 // Wait for Cordova to load
 
 if(typeof device === 'undefined'){
-    document.addEventListener("deviceready", onDeviceReady, false);
+    document.addEventListener("deviceready", initSqlLite, false);
 }else{
-    onDeviceReady();
+	initSqlLite();
 }
 
 // Cordova is ready
 //
-function onDeviceReady() {
+function initSqlLite() {
     var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
     db.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS login_info (id integer primary key not null, pin text)');

@@ -28,7 +28,6 @@ var oldPinNo = ""; //旧PINコード（更新用）
  {
 
 	$("#btn_pin_update").on("click", function(){
-		alert(1);
 		pageStatus = PAGE_STATUS_PIN_UPDATE;
 	});
  }
