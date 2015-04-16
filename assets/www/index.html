@@ -67,6 +67,16 @@
 					initSiteDetail();
 				}
 			}
+
+			alert(2);
+			document.addEventListener("backbutton", resetPageStatus, false);
+			alert(5);
+			function resetPageStatus(e){
+				alert(0);
+			    if (pageStatus == PAGE_STATUS_PIN_UPDATE) {
+			    	pageStatus = PAGE_STATUS_SING_IN;
+			    }
+			}
 		</script>
 		<!--
    You may substitute jQuery for the App Framework selector library.
@@ -182,7 +192,7 @@
 						<div class="widget-container content-area horiz-area wrapping-col left">
 						</div>
 						<div class="widget-container content-area horiz-area wrapping-col right">
-							<a class="button widget uib_w_25 d-margins icon settings gray" data-uib="app_framework/button" data-ver="1" href="#input_pin"></a>
+							<a class="button widget uib_w_25 d-margins icon settings gray" data-uib="app_framework/button" data-ver="1" href="#input_pin" id="btn_pin_update"></a>
 						</div>
 					</header>
 

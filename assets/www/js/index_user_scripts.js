@@ -1,9 +1,22 @@
-var pinValues = [];
+/** 画面状態：未定義 */
+var PAGE_STATUS_UNDEFINED = -1;
+/** 画面状態：サインアップ（初回登録） */
+var PAGE_STATUS_SING_UP = 1;
+/** 画面状態：サインイン */
+var PAGE_STATUS_SING_IN = 2;
+/** 画面状態：PINコード変更 */
+var PAGE_STATUS_PIN_UPDATE = 3;
+
 var PIN_CONF = "PINコードを確認します。再入力してください";
 var PIN_ERROR = "PINコードが違います。再入力してください";
 var PIN_ERROR_CONF = "PINコードが一致しません。再入力してください";
+var PIN_UPDATE = "新しいPINコードを入力してください";
+
+var pageStatus = PAGE_STATUS_UNDEFINED;
+var pinValues = [];
 var pinNo = ""; //PINコード文字列
 var registPinNo = ""; // PINコード（初回登録・更新用）
+var oldPinNo = ""; //旧PINコード（更新用）
 
 (function()
 {
@@ -14,7 +27,10 @@ var registPinNo = ""; // PINコード（初回登録・更新用）
  function register_event_handlers()
  {
 
-
+	$("#btn_pin_update").on("click", function(){
+		alert(1);
+		pageStatus = PAGE_STATUS_PIN_UPDATE;
+	});
  }
  $(document).ready(register_event_handlers);
 
@@ -39,53 +55,128 @@ function chgDispValue(btnNo){
 
 	chgDispRef();
 
-
 	// PINコードに4桁入力された場合
 	if(pinValues.length > 3){
 
-		// 初回判定
-		if (isFirstTime()) {
-			if (registPinNo == "") {
-				registPinNo = pinNo;
-				$("#label_summary").find("p").text(PIN_CONF);
-
-				// 初期化＆再表示
-				pinValues = [];
-				chgDispRef();
-				return;
+		if (pageStatus == PAGE_STATUS_UNDEFINED) {
+			if (isFirstTime()) {
+				pageStatus = PAGE_STATUS_SING_UP;
 			} else {
-				if (registPinNo == pinNo) {
-					insertPin();
-				} else {
-					// エラーメッセージ設定
-					$("#label_summary").find("p").text(PIN_ERROR_CONF);
-
-					// 初期化＆再表示
-					registPinNo = "";
-					pinValues = [];
-					chgDispRef();
-
-				}
+				pageStatus = PAGE_STATUS_SING_IN;
 			}
 		}
 
-		// 入力パスワード確認
-		if(checkPin()){
-			// メッセージ初期化
-			$("#label_summary").find("p").text("");
-			pinValues = [];
-			chgDispRef();
+		if (pageStatus == PAGE_STATUS_SING_UP) {
+			// サインアップ
+			singUp();
+		} else if (pageStatus == PAGE_STATUS_SING_IN) {
+			// サインイン
+			singIn();
+		} else if (pageStatus == PAGE_STATUS_PIN_UPDATE) {
+			// PINコード変更
+			pinUpdate();
+		}
+	}
+}
 
-			// TODO OK:一覧画面に遷移
-			$("#switch_site_list").click();
+/*************************************************
+**  サインアップ（初回サインイン）
+**************************************************/
+function singUp() {
+	if (registPinNo == "") {
+		registPinNo = pinNo;
+		$("#label_summary").find("p").text(PIN_CONF);
 
+		// 初期化＆再表示
+		pinValues = [];
+		chgDispRef();
+	} else {
+		if (registPinNo == pinNo) {
+
+			// PINコードを登録してサインイン
+			insertPin();
+			registPinNo = "";
+			pageStatus = PAGE_STATUS_SING_IN;
+			singIn();
 		} else {
 			// エラーメッセージ設定
+			$("#label_summary").find("p").text(PIN_ERROR_CONF);
+
+			// 初期化＆再表示
+			registPinNo = "";
+			pinValues = [];
+			chgDispRef();
+		}
+	}
+}
+
+/*************************************************
+**  サインイン
+**************************************************/
+function singIn() {
+	// 入力パスワード確認
+	if(checkPin()){
+		// メッセージ初期化
+		$("#label_summary").find("p").text("");
+		pinValues = [];
+		chgDispRef();
+
+		// TODO OK:一覧画面に遷移
+		$("#switch_site_list").click();
+		pageStatus = PAGE_STATUS_SITE_LIST;
+
+	} else {
+		// エラーメッセージ設定
+		$("#label_summary").find("p").text(PIN_ERROR);
+
+		// 初期化＆再表示
+		pinValues = [];
+		chgDispRef();
+	}
+}
+
+/*************************************************
+**  PINコード変更
+**************************************************/
+function pinUpdate() {
+	if (oldPinNo == "") {
+		if (checkPin()) {
+			oldPinNo = pinNo;
+			$("#label_summary").find("p").text(PIN_UPDATE);
+		} else {
 			$("#label_summary").find("p").text(PIN_ERROR);
+		}
+
+		// 初期化＆再表示
+		pinValues = [];
+		chgDispRef();
+	} else {
+		if (registPinNo == "") {
+			registPinNo = pinNo;
+			$("#label_summary").find("p").text(PIN_CONF);
 
 			// 初期化＆再表示
 			pinValues = [];
 			chgDispRef();
+		} else {
+			if (registPinNo == pinNo) {
+
+				// PINコードを更新してサインイン
+				updatePin();
+				registPinNo = "";
+				oldPinNo = "";
+				pageStatus = PAGE_STATUS_SING_IN;
+				alert("更新しました。");
+				singIn();
+			} else {
+				// エラーメッセージ設定
+				$("#label_summary").find("p").text(PIN_ERROR_CONF);
+
+				// 初期化＆再表示
+				registPinNo = "";
+				pinValues = [];
+				chgDispRef();
+			}
 		}
 	}
 }
@@ -123,6 +214,9 @@ function chgDispRef(){
 
 }
 
+/*************************************************
+**  初回判定（初回ならtrue）
+**************************************************/
 function isFirstTime() {
 	var result = false;
 	var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
@@ -143,6 +237,13 @@ function insertPin() {
     //テスト用（登録内容を表示する）
     //testSel();
     //alert("登録値pin" + pinNo);
+}
+
+/***********************************
+** Pin変更処理 **
+***********************************/
+function updatePin() {
+	queryUpdate("UPDATE login_info SET pin = ? WHERE pin = ? ", [pinNo, oldPinNo]);
 }
 
 /* テスト用 */
