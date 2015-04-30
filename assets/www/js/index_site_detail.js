@@ -39,8 +39,8 @@ function initSiteDetail() {
 				// 取得した値を反映
 				$("#site_name").val(res.rows.item(0).site_name);
 				$("#login_id").val(res.rows.item(0).account_id);
-				$("#password-pwd").val(res.rows.item(0).account_password);
-				$("#password-txt").val(res.rows.item(0).account_password);
+				$("#password-pwd").val(decode(res.rows.item(0).account_password));
+				$("#password-txt").val(decode(res.rows.item(0).account_password));
 				$("#site_url").val(res.rows.item(0).site_url);
 				$("#notes").val(res.rows.item(0).notes);
 			});
@@ -161,7 +161,7 @@ function updateDetail() {
 	var param = [];
 	param.push($("#site_name").val());
 	param.push($("#login_id").val());
-	param.push($(pwId).val());
+	param.push(encode($(pwId).val()).toString());
 	param.push($("#site_url").val());
 	param.push($("#notes").val());
 	param.push($("#site_id").val());
@@ -196,7 +196,7 @@ function insertDetail() {
 	var param = [];
 	param.push($("#site_name").val());
 	param.push($("#login_id").val());
-	param.push($("$" + getPasswordId()).val());
+	param.push(encode($("#" + getPasswordId()).val()).toString());
 	param.push($("#site_url").val());
 	param.push($("#notes").val());
 
