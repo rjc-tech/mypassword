@@ -43,6 +43,13 @@ function initSiteDetail() {
 				$("#password-txt").val(decode(res.rows.item(0).account_password));
 				$("#site_url").val(res.rows.item(0).site_url);
 				$("#notes").val(res.rows.item(0).notes);
+
+				$("#org_site_name").val(res.rows.item(0).site_name);
+				$("#org_login_id").val(res.rows.item(0).account_id);
+				$("#org_password").val(res.rows.item(0).account_password);
+				$("#org_site_url").val(res.rows.item(0).site_url);
+				$("#org_notes").val(res.rows.item(0).notes);
+
 			});
 		});
 
@@ -147,33 +154,46 @@ function updateDetail() {
 		return;
 	}
 
+	var param = [];
 	// 【更新処理】
 	// サイト名
-	sql = sql + 'site_name = ?,';
-	// ログインID
-	sql = sql + "account_id = ?,";
-	// パスワード
-	sql = sql + 'account_password = ?,';
-	// サイトURL
-	sql = sql + 'site_url = ?,';
-	// 備考
-	sql = sql + 'notes = ?';
-	// 条件
-	sql = sql + ", last_access_datetime = datetime('now', 'localtime') where id = ?";
+	if ($("#site_name").val() != $("#org_site_name").val()) {
+		sql = sql + 'site_name = ?,';
+		param.push($("#site_name").val());
+	}
 
-	var param = [];
-	param.push($("#site_name").val());
-	param.push($("#login_id").val());
-	param.push(encode($(pwId).val()));
-	param.push($("#site_url").val());
-	param.push($("#notes").val());
+	// ログインID
+	if ($("#login_id").val() != $("#org_login_id").val()) {
+		sql = sql + "account_id = ?,";
+		param.push($("#login_id").val());
+	}
+
+	// パスワード
+	if ($(pwId).val() != $("#org_password").val()) {
+		sql = sql + 'account_password = ?,';
+		param.push(encode($(pwId).val()));
+	}
+
+	// サイトURL
+	if ($("#site_url").val() != $("#org_site_url").val()) {
+		sql = sql + 'site_url = ?,';
+		param.push($("#site_url").val());
+	}
+
+	// 備考
+	if ($("#notes").val() != $("#org_notes").val()) {
+		sql = sql + 'notes = ?,';
+		param.push($("#notes").val());
+	}
+
+	// 条件
+	sql = sql + "last_access_datetime = datetime('now', 'localtime') where id = ?";
 	param.push($("#site_id").val());
 
 	if (!queryUpdate(sql, param)) {
 		alert("更新に失敗しました。");
 		return;
 	}
-
 	alert("更新しました。");
 
 	// サイト一覧画面に遷移
@@ -201,8 +221,8 @@ function insertDetail() {
 	if (!validateSiteDetail()) {
 		return;
 	}
-	var sql = "INSERT INTO site_info (id, site_name, account_id, account_password, site_url, notes, last_access_datetime) " +
-			  "VALUES ((SELECT MAX(id+1) FROM site_info),?,?,?,?,?,datetime('now', 'localtime'))";
+	var sql = "INSERT INTO site_info (site_name, account_id, account_password, site_url, notes, last_access_datetime) " +
+			  "VALUES (?,?,?,?,?,datetime('now', 'localtime'))";
 	var param = [];
 	param.push($("#site_name").val());
 	param.push($("#login_id").val());
