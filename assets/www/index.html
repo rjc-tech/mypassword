@@ -92,18 +92,41 @@
 				document.addEventListener("backbutton", resetPageStatus, false);
 			}, false);
 
-			function resetPageStatus(e){
-			    if (pageStatus == PAGE_STATUS_PIN_UPDATE) {
-			    	pageStatus = PAGE_STATUS_SITE_LIST;
-					// 初期化
-					$("#label_summary").find("p").text("");
-					oldPinNo = registPinNo = "";
-					clearInput();
+			function resetPageStatus(e) {
+				var uri = window.location.toString();
+				// PIN入力画面の場合
+				if (uri.match("#input_pin")) {
+
+					// PINコード変更画面の場合
+					if (pageStatus == PAGE_STATUS_PIN_UPDATE) {
+						// ステータスを変更
+						pageStatus = PAGE_STATUS_SITE_LIST;
+						// 初期化
+						$("#label_summary").find("p").text("");
+						oldPinNo = registPinNo = "";
+						clearInput();
+
+						// サイトリスト画面へ遷移
+						$("#switch_site_list").click();
+						return;
+					}
+				// サイト詳細画面の場合
+				} else if (uri.match("#site_detail")) {
+					// サイト一覧画面へ遷移
 					$("#switch_site_list").click();
-			    } else if (pageStatus <= PAGE_STATUS_SING_IN) {
-			    	navigator.app.exitApp();
-			    }
-				navigator.app.backHistory();
+					return;
+				// サイト一覧画面の場合
+				} else if (uri.match("#site_list")) {
+					// TODO 暫定：取消ボタンが出てきてしまうのでPIN入力には遷移せずにアプリ終了
+					// PIN入力へ遷移
+					// $("#switch_input_pin").click();
+					// return;
+				}
+				// TODO 暫定：考慮外のケースはアプリ終了
+				// アプリ終了
+				navigator.app.exitApp();
+				// ヒストリーバック
+				// navigator.app.backHistory();
 			}
 		</script>
 	</head>
@@ -114,7 +137,7 @@
 		<div class="uwrap" id="content">
 			<div class="upage panel" id="input_pin" data-header="af-header-2" data-footer="none">
 				<!-- 遷移イベント TODO 遷移できない暫定対応 -->
-				<a href="#pin_input" id="switch_pin_input"></a>
+				<a href="#input_pin" id="switch_input_pin"></a>
 				<a href="#site_list" id="switch_site_list"></a>
 				<a href="#site_detail" id="switch_site_detail"></a>
 
