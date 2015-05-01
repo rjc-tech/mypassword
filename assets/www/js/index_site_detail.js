@@ -161,7 +161,7 @@ function updateDetail() {
 	var param = [];
 	param.push($("#site_name").val());
 	param.push($("#login_id").val());
-	param.push(encode($(pwId).val()).toString());
+	param.push(encode($(pwId).val()));
 	param.push($("#site_url").val());
 	param.push($("#notes").val());
 	param.push($("#site_id").val());
@@ -196,7 +196,7 @@ function insertDetail() {
 	var param = [];
 	param.push($("#site_name").val());
 	param.push($("#login_id").val());
-	param.push(encode($("#" + getPasswordId()).val()).toString());
+	param.push(encode($("#" + getPasswordId()).val()));
 	param.push($("#site_url").val());
 	param.push($("#notes").val());
 
