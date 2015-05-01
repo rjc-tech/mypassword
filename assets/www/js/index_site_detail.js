@@ -136,6 +136,9 @@ function changeShowPassword() {
 
 /** 詳細画面：入力された内容でDBを更新する */
 function updateDetail() {
+	if (!validateSiteDetail()) {
+		return;
+	}
 	var sql = SQL_UPDATE_SITEINFO;
 	var pwId = "#" + getPasswordId();
 
@@ -191,6 +194,9 @@ function addUpdateSql(sql, columnName, param, arrParam) {
 
 /** 詳細画面：入力された内容をDBに登録する */
 function insertDetail() {
+	if (!validateSiteDetail()) {
+		return;
+	}
 	var sql = "INSERT INTO site_info (id, site_name, account_id, account_password, site_url, notes, last_access_datetime) " +
 			  "VALUES ((SELECT MAX(id+1) FROM site_info),?,?,?,?,?,datetime('now', 'localtime'))";
 	var param = [];
@@ -202,6 +208,9 @@ function insertDetail() {
 
 	queryInsert(sql, param);
 	alert("サイト情報の登録が完了しました。");
+
+	// サイト一覧画面に遷移
+	forwardPage("#site_list");
 }
 
 /** 詳細画面：選択されたサイト情報を削除する */
@@ -221,3 +230,14 @@ function deleteDetail() {
 	// サイト一覧画面に遷移
 	forwardPage("#site_list");
 }
+
+/** バリデーション（return true:valid, false:invalid） */
+function validateSiteDetail() {
+	var exclusionURLCharacters = "\"|<|>|\\[|\\\\|\\]|\\^|`|\\{|\\}";
+	// URLの検査（禁止文字の使用有無）
+	if ($("#site_url").val().match(exclusionURLCharacters)) {
+		alert("URLに使用できない文字が含まれています。");
+		return false;
+	}
+	return true;
+};
