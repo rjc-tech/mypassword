@@ -169,7 +169,11 @@ function updateDetail() {
 	param.push($("#notes").val());
 	param.push($("#site_id").val());
 
-	queryUpdate(sql, param);
+	if (!queryUpdate(sql, param)) {
+		alert("更新に失敗しました。");
+		return;
+	}
+
 	alert("更新しました。");
 
 	// サイト一覧画面に遷移
@@ -206,7 +210,12 @@ function insertDetail() {
 	param.push($("#site_url").val());
 	param.push($("#notes").val());
 
-	queryInsert(sql, param);
+
+	if (!queryInsert(sql, param)) {
+		alert("サイト情報の登録に失敗しました。");
+		return;
+	}
+
 	alert("サイト情報の登録が完了しました。");
 
 	// サイト一覧画面に遷移
@@ -224,7 +233,11 @@ function deleteDetail() {
 	var sql = "DELETE FROM site_info WHERE id = ?";
 	var param = [];
 	param.push($("#site_id").val());
-	queryDelete(sql, param);
+
+	if (!queryDelete(sql, param)) {
+		alert("削除に失敗しました。");
+		return;
+	}
 	alert("削除しました。");
 
 	// サイト一覧画面に遷移

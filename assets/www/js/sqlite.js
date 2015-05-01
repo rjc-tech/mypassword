@@ -17,39 +17,48 @@ function initSqlLite() {
 }
 
 function queryInsert(sql, param) {
+	var isSuccess = false;
     var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
     db.transaction(function(tx) {
         // tx.executeSql("INSERT INTO login_info (id, pin) VALUES (?,?)", [1, "0000"], function(tx, res) {
         tx.executeSql(sql, param, function(tx, res) {
             console.log("insertId: " + res.insertId + " -- probably 1");
             console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
+            isSuccess = true;
         }, function(e) {
             console.log("ERROR: " + e.message);
         });
     });
+    return isSuccess;
 }
 
 function queryUpdate(sql, param) {
+	var isSuccess = false;
     var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
     db.transaction(function(tx) {
         // tx.executeSql("UPDATE login_info SET pin=? WHERE id=?", ["xxxxx", 1], function(tx, res) {
         tx.executeSql(sql, param, function(tx, res) {
             console.log("updateId: " + res.updateId + " -- probably 1");
             console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
+            isSuccess = true;
         }, function(e) {
             console.log("ERROR: " + e.message);
         });
     });
+    return isSuccess;
 }
 function queryDelete(sql, param) {
+	var isSuccess = false;
     var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
     db.transaction(function(tx) {
         // tx.executeSql("DELETE FROM login_info WHERE id = ?", [1], function(tx, res) {
         tx.executeSql(sql, param, function(tx, res) {
             console.log("deleteId: " + res.deleteId + " -- probably 1");
             console.log("rowsAffected: " + res.rowsAffected + " -- should be 1");
+            isSuccess = true;
         }, function(e) {
             console.log("ERROR: " + e.message);
         });
     });
+    return isSuccess;
 }
