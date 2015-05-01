@@ -67,19 +67,6 @@
 					initSiteDetail();
 				}
 			}
-
-			// TODO バックキー制御
-			// document.addEventListener("deviceready", function(){
-			//	document.addEventListener("backbutton", resetPageStatus, false);
-			//}, false);
-
-			function resetPageStatus(e){
-			    if (pageStatus == PAGE_STATUS_PIN_UPDATE) {
-			    	pageStatus = PAGE_STATUS_SING_IN;
-			    	// TODO メッセージクリア等
-			    }
-			    return true;
-			}
 		</script>
 		<!--
    You may substitute jQuery for the App Framework selector library.
@@ -97,6 +84,28 @@
 		<script src="js/common.js"></script>
 		<script src="js/aes.js"></script>
 		<script src="js/turbine.js"></script>
+
+		<script type="text/javascript">
+
+			// バックキー制御
+			document.addEventListener("deviceready", function(){
+				document.addEventListener("backbutton", resetPageStatus, false);
+			}, false);
+
+			function resetPageStatus(e){
+			    if (pageStatus == PAGE_STATUS_PIN_UPDATE) {
+			    	pageStatus = PAGE_STATUS_SITE_LIST;
+					// 初期化
+					$("#label_summary").find("p").text("");
+					oldPinNo = registPinNo = "";
+					clearInput();
+					$("#switch_site_list").click();
+			    } else if (pageStatus <= PAGE_STATUS_SING_IN) {
+			    	navigator.app.exitApp();
+			    }
+				navigator.app.backHistory();
+			}
+		</script>
 	</head>
 
 	<body id="afui">
@@ -114,7 +123,7 @@
 					<header class="container-group inner-element uib_w_39" data-uib="app_framework/header" data-ver="1" id="af-header-2">
 						<h1>PINコード入力</h1>
 						<div class="widget-container wrapping-col single-centered"></div>
-						<div class="widget-container content-area horiz-area wrapping-col left with-back"><a class="button backButton" href="site_list">取消</a>
+						<div class="widget-container content-area horiz-area wrapping-col left with-back"><a id="btn_pin_update_cancel" class="button backButton" href="site_list">取消</a>
 						</div>
 						<div class="widget-container content-area horiz-area wrapping-col right"></div>
 					</header>
