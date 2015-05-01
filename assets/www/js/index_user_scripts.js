@@ -232,7 +232,7 @@ function isFirstTime() {
 ***********************************/
 function insertPin() {
 
-    queryInsert("INSERT INTO login_info (pin) VALUES (?)", [pinNo]);
+    queryInsert("INSERT INTO login_info (pin) VALUES (?)", [encode(pinNo)]);
     //テスト用（登録内容を表示する）
     //testSel();
     //alert("登録値pin" + pinNo);
@@ -242,7 +242,7 @@ function insertPin() {
 ** Pin変更処理 **
 ***********************************/
 function updatePin() {
-	queryUpdate("UPDATE login_info SET pin = ? WHERE pin = ? ", [pinNo, oldPinNo]);
+	queryUpdate("UPDATE login_info SET pin = ? WHERE id = ? ", [encode(pinNo), 1]);
 }
 
 /* テスト用 */
@@ -261,8 +261,8 @@ function testSel() {
 }
 
 /*****************************************************************
- * ログイン画面に入力されたPINコード（4桁）をキーにDBを参照する。
- * 参照した結果に応じて要求元に結果を返す。
+ * ログイン画面に入力されたPINコード（4桁）がDB値と一致するか検証する。
+ * 検証した結果に応じて要求元に結果を返す。
  * ・一致するPINコードが存在した場合：trueを返却する。
  * ・一致するPINコードが存在しない場合：falseを返却する。
  ****************************************************************/
@@ -271,32 +271,19 @@ function checkPin(){
 	var retCnt = 0;
 	var sql = "";
 	var inputPin = String(pinValues[0]) + String(pinValues[1]) + String(pinValues[2]) + String(pinValues[3]);
-	// alert("PINコード" + inputPin);
 
 	// 取得したPWがDBのPW一覧に存在するかを確認する。
 	var db = window.sqlitePlugin.openDatabase("Database", "1.0", "mypassword", 200000);
 	db.transaction(function(tx) {
-		// データ登録用（登録処理の実装が終わったら消す予定）
-		// tx.executeSql("insert into login_info (id, pin) values (001, 0000);", [], function(tx, res) {
-		// });
-		tx.executeSql("select id, pin from login_info where pin = " + inputPin + ";", [], function(tx, res) {
-			retCnt = res.rows.length;
-        //    alert("データ取得件数 ： " + retCnt);
-        //    for(var i = 0; i < res.rows.length; i++){
-        //        console.log(res.rows.item(i).id);
-        //        console.log(res.rows.item(i).pin);
-        //    }
+		tx.executeSql("select id, pin from login_info where id = ?", [1], function(tx, res) {
+			for(var i = 0; i < res.rows.length; i++){
+				if (inputPin == decode(res.rows.item(i).pin)) {
+					judgeFlg = true;
+					break;
+				}
+			}
 		});
 	});
-
-	// 取得件数0件
-	if(0 == retCnt){
-		// NG：flase設定
-		judgeFlg = false;
-	}else{
-		// OK：true設定
-		judgeFlg = true;
-	}
 
 	return judgeFlg;
 }
