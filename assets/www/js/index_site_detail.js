@@ -191,10 +191,10 @@ function updateDetail() {
 	param.push($("#site_id").val());
 
 	if (!queryUpdate(sql, param)) {
-		alert("更新に失敗しました。");
+		alert("サイト情報の更新に失敗しました。");
 		return;
 	}
-	alert("更新しました。");
+	alert("サイト情報を更新しました。");
 
 	// サイト一覧画面に遷移
 	forwardPage("#site_list");
@@ -236,7 +236,7 @@ function insertDetail() {
 		return;
 	}
 
-	alert("サイト情報の登録が完了しました。");
+	alert("サイト情報を登録しました。");
 
 	// サイト一覧画面に遷移
 	forwardPage("#site_list");
@@ -246,7 +246,6 @@ function insertDetail() {
 function deleteDetail() {
 
 	if ( ! confirm($("#site_name").val() + "を削除します。\nよろしいですか？")) {
-		alert("キャンセルされました。");
 		return;
 	}
 
@@ -255,10 +254,10 @@ function deleteDetail() {
 	param.push($("#site_id").val());
 
 	if (!queryDelete(sql, param)) {
-		alert("削除に失敗しました。");
+		alert("サイト情報の削除に失敗しました。");
 		return;
 	}
-	alert("削除しました。");
+	alert("サイト情報を削除しました。");
 
 	// サイト一覧画面に遷移
 	forwardPage("#site_list");
@@ -266,7 +265,7 @@ function deleteDetail() {
 
 /** バリデーション（return true:valid, false:invalid） */
 function validateSiteDetail() {
-	var exclusionURLCharacters = "\"|<|>|\\[|\\\\|\\]|\\^|`|\\{|\\}";
+	var exclusionURLCharacters = "<|>|\\[|\\\\|\\]|\\^|`|\\{|\\}|\\|";
 	// URLの検査（禁止文字の使用有無）
 	if ($("#site_url").val().match(exclusionURLCharacters)) {
 		alert("URLに使用できない文字が含まれています。");
